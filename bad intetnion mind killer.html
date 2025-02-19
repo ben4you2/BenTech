@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Intention Mind Killer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .mindKiller {
+            width: 150px;
+            height: 150px;
+            background-color: #333;
+            position: relative;
+            margin: 20px auto;
+            border-radius: 50%;
+        }
+        .eye {
+            width: 50px;
+            height: 50px;
+            background-color: #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            transform: translate(-50%, -50%);
+        }
+        .pupil {
+            width: 20px;
+            height: 20px;
+            background-color: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .button {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -20px;
+            left: 52px;
+            cursor: pointer;
+        }
+        .button:active {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bad Intention Mind Killer</h1>
+        <div class="mindKiller">
+            <div class="eye">
+                <div class="pupil"></div>
+            </div>
+            <div class="button" onclick="killMind()"></div>
+        </div>
+    </div>
+
+    <script>
+        function killMind() {
+            alert("This is a harmless demonstration. No actual harm will occur.");
+        }
+        
+      alert(confirm("Don toou select the option? "));
+    </script>
+</body>
+</html>
