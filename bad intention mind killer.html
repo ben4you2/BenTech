@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,6 +66,13 @@
         .button:active {
             background-color: #c0392b;
         }
+        .particle {
+            width: 5px;
+            height: 5px;
+            background-color: #000;
+            position: absolute;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -82,8 +90,27 @@
         function killMind() {
             alert("This is a harmless demonstration. No actual harm will occur.");
         }
-        
-        alert(confirm("Do you want to select this option?"));
+
+        function detectParticles() {
+            const particleCount = 10;
+            const container = document.querySelector('.container');
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                container.appendChild(particle);
+            }
+
+            setTimeout(() => {
+                alert("Particles detected in the virtual environment.");
+                container.querySelectorAll('.particle').forEach(p => p.remove());
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            detectParticles();
+        });
     </script>
 </body>
 </html>
