@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Mobile Lotto Pro</title>
+ <style>
+ 
+ html{
+  background-image:url("/IMG_1445.jpeg");
+  background-repeat: no-repeat;
+  background-size: initial;
+  color:#000;
+ }
+ body {
+ font-family: Arial, sans-serif;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ min-height: 100vh;
+ margin: 0;
+ background-color: #f0f0f0;
+ padding: 10px;
+ text-align: center;
+ }
+ button {
+ padding: 12px 24px;
+ font-size: 16px;
+ background-color:#007bff;
+ color:#fff;
+/* color: white;*/
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ margin: 5px;
+
+ }
+ button:hover {
+ background-color: #0056b3;
+ }
+ input {
+ padding: 8px;
+ font-size: 14px;
+ margin: 5px;
+ width: 60px;
+ }
+ #output, #stats, #wheel {
+ font-size: 18px;
+ margin: 10px 0;
+/* color: #333;*/
+color:#326;
+ }
+ .section {
+ margin: 20px 0;
+ width: 90%;
+ max-width: 600px;
+ }
+ </style>
+</head>
+<body>
+ <h2>Mobile Lotto Pro JS</h2>
+ <h4>Ben4you Tecnology 2025</h4>
+ <div class="section">
+ <h3>Generate Numbers</h3>
+ <label>Numbers to Pick: <input type="number" id="count" value="6" min="1"></label><br>
+ <label>Max Number: <input type="number" id="max" value="49" min="10"></label><br>
+ <button onclick="generateRandom()">Random Numbers</button>
+ <button onclick="generateSmart()">Smart Numbers</button>
+ 
+ <hr style="font-size:20px;margin:20px; width:250px; border-color:#fff;
+ padding:15px;background-color:midnightblue;color:#fff;border-radius:12px;"
+ <div id="output"></div>
+ </div>
+ <div class="section">
+ <h3>Statistics</h3>
+ <button onclick="showStats()">Show Past Draw Stats</button>
+ <div id="stats"></div>
+ </div>
+ <div class="section">
+ <h3>Wheeling System</ h3>
+ <button onclick="generateWheel()">Generate Wheel (3 Tickets)</button>
+ <div id="wheel"></div>
+ </div>
+ 
+ <footer>
+  <i class="fa fa-github"></i>
+ </footer>
+
+ <script>
+ // Mock past draw history (simulating Lotto Pro's database)
+ const pastDraws = [
+ [3, 12, 19, 25, 36, 42], [7, 14, 23, 28, 39, 45], [1, 15, 22, 30, 41, 48],
+ [5, 11, 20, 27, 33, 47], [9, 17, 24, 31, 38, 49]
+ ];
+
+ // Calculate frequency for stats
+ function getNumberFrequencies(max) {
+ const freq = Array(max + 1).fill(0);
+ pastDraws.flat().forEach(num => freq[num]++);
+ return freq;
+ }
+
+ // Generate random unique numbers
+ function generateNumbers(count, max, useSmart = false) {
+ if (count > max) {
+ alert("Number of picks cannot exceed the maximum number!");
+ return [];
+ }
+ let numbers = [];
+ const freq = useSmart ? getNumberFrequencies(max) : null;
+
+ while (numbers.length < count) {
+ let num;
+ if (useSmart) {
+ // Favor "hot" numbers (higher frequency)
+ const hotNumbers = freq.map((f, i) => ({ num: i, freq: f }))
+ .filter(x => x.freq > 0).sort((a, b) => b.freq - a.freq);
+ const topHot = hotNumbers.slice(0, Math.min(10, hotNumbers.length));
+ num = topHot[Math.floor(Math.random() * topHot.length)].num;
+ } else {
+ num = Math.floor(Math.random() * max) + 1;
+ }
+ if (!numbers.includes(num)) numbers.push(num);
+ }
+ return numbers.sort((a, b) => a - b);
+ }
+
+ // Random number generator
+ function generateRandom() {
+ const count = parseInt(document.getElementById('count').value);
+ const max = parseInt(document.getElementById('max').value);
+ const numbers = generateNumbers(count, max);
+ document.getElementById('output').innerText = numbers.length ?
+ `Your Numbers: ${numbers.join(", ")}` : "";
+ }
+
+ // Smart number generator (mimics Lotto Pro's Smart Number Wizard)
+ function generateSmart() {
+ const count = parseInt(document.getElementById('count').value);
+ const max = parseInt(document.getElementById('max').value);
+ const numbers = generateNumbers(count, max, true);
+ document.getElementById('output').innerText = numbers.length ?
+ `Smart Numbers: ${numbers.join(", ")}` : "";
+ }
+
+ // Show basic stats from past draws
+ function showStats() {
+ const max = parseInt(document.getElementById('max').value);
+ const freq = getNumberFrequencies(max);
+ const hot = freq.map((f, i) => ({ num: i, freq: f }))
+ .filter(x => x.freq > 0).sort((a, b) => b.freq - a.freq).slice(0, 5);
+ const cold = freq.map((f, i) => ({ num: i, freq: f }))
+ .filter(x => x.freq === 0).map(x => x.num).slice(0, 5);
+ document .getElementById('stats').innerHTML =
+ `Hot Numbers (Top 5): ${hot.map(h => h.num).join(", ")}<br>` +
+ `Cold Numbers (Sample 5): ${cold.join(", ")}`;
+ }
+
+ // Simple wheeling system (3 tickets covering more combinations)
+ function generateWheel() {
+ const count = parseInt(document.getElementById('count').value);
+ const max = parseInt(document.getElementById('max').value);
+ const baseNumbers = generateNumbers(count, max);
+ const wheel = [
+ baseNumbers.slice(0, -1).concat([Math.floor(Math.random() * max) + 1]),
+ baseNumbers.slice(1).concat([Math.floor(Math.random() * max) + 1]),
+ baseNumbers.slice(0, -2).concat([Math.floor(Math.random() * max) + 1, Math.floor(Math.random() * max) + 1])
+ ].map(ticket => ticket.filter((n, i, self) => self.indexOf(n) === i && n <= max)
+ .sort((a, b) => a - b));
+ document.getElementById('wheel').innerHTML = wheel
+ .map((ticket, i) => `Ticket ${i + 1}: ${ticket.join(", ")}`).join("<br>");
+ }
+ </script>
+</body>
+</html>
+​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
