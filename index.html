@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -42,5 +42,39 @@
       });
     }
   </script>
+</body
+</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emergency App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Emergency Panic Button</h1>
+  <form id="userForm">
+    <label>
+      Name:
+      <input type="text" id="userName" required>
+    </label><br>
+    <label>
+      Phone:
+      <input type="tel" id="userPhone" required>
+    </label><br>
+    <label>
+      Medical Info (optional):
+      <input type="text" id="userMedical">
+    </label><br>
+    <button type="submit" id="saveBtn">Save Details</button>
+  </form>
+
+  <button id="panicBtn" disabled>PANIC!</button>
+  <div id="status"></div>
+  <script src="app.js"></script>
 </body>
 </html>
+
+
