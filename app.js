@@ -1,4 +1,4 @@
-
+/*
 const express = require('express');
 const bodyParser = require('body-parser');
 const twilio = require('twilio');
@@ -102,4 +102,71 @@ function renderContacts() {
   });
 }
 
+*/
+
 // Add logic for adding/editing/deleting contacts
+
+
+
+// Enable Panic button if user info is present
+function checkUserInfo() {
+  const name = localStorage.getItem('userName');
+  const phone = localStorage.getItem('userPhone');
+  document.getElementById('panicBtn').disabled = !(name && phone);
+}
+checkUserInfo();
+
+// Save user info from form
+document.getElementById('userForm').onsubmit = function(e) {
+  e.preventDefault();
+  localStorage.setItem('userName', document.getElementById('userName').value.trim());
+  localStorage.setItem('userPhone', document.getElementById('userPhone').value.trim());
+  localStorage.setItem('userMedical', document.getElementById('userMedical').value.trim());
+  document.getElementById('status').textContent = "Details saved. You can now trigger emergency alert.";
+  checkUserInfo();
+};
+
+// Pre-fill form if info is present
+window.onload = function() {
+  document.getElementById('userName').value = localStorage.getItem('userName') || '';
+  document.getElementById('userPhone').value = localStorage.getItem('userPhone') || '';
+  document.getElementById('userMedical').value = localStorage.getItem('userMedical') || '';
+  checkUserInfo();
+}
+
+// PANIC button logic
+document.getElementById('panicBtn').onclick = async function() {
+  document.getElementById('status').textContent = "Sending emergency alert...";
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const userData = {
+      name: localStorage.getItem('userName'),
+      phone: localStorage.getItem('userPhone'),
+      medical: localStorage.getItem('userMedical'),
+      latitude: pos.coords.latitude,
+      longitude: pos.coords.longitude
+    };
+    try {
+      const res = await fetch('/api/emergency', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      if (res.ok) {
+        document.getElementById('status').textContent = "Alert sent to contacts & authorities!";
+      } else {
+        document.getElementById('status').textContent = "Failed to send alert.";
+      }
+    } catch (e) {
+      document.getElementById('status').textContent = "Error sending alert.";
+    }
+  }, (err) => {
+    alert("Unable to get location: " + err.message);
+  });
+};
+
+
+
