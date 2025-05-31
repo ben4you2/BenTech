@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emergency App</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { font-size: 2em; padding: 20px 40px; background: red; color: white; border: none; border-radius: 10px; }
+    #status { margin-top: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h1>Emergency Panic Button</h1>
+  <button id="panicBtn">PANIC!</button>
+  <div id="status"></div>
+  <script>
+    document.getElementById('panicBtn').onclick = async function() {
+      document.getElementById('status').textContent = "Sending emergency alert...";
+      // Get geolocation
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const res = await fetch('/api/emergency', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude, longitude })
+          });
+          if (res.ok) {
+            document.getElementById('status').textContent = "Alert sent to contacts & authorities!";
+          } else {
+            document.getElementById('status').textContent = "Failed to send alert.";
+          }
+        } catch (e) {
+          document.getElementById('status').textContent = "Error sending alert.";
+        }
+      }, (err) => {
+        alert("Unable to get location: " + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
