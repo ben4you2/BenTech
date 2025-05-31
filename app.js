@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const twilio = require('twilio');
@@ -54,3 +55,51 @@ app.use(express.static('frontend'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Emergency app running on port ${PORT}`));
+
+
+
+
+// i18n setup (using i18next)
+i18next.init({
+  lng: 'en',
+  resources: {
+    en: { translation: await (await fetch('i18n/en.json')).json() },
+    fr: { translation: await (await fetch('i18n/fr.json')).json() }
+  }
+}, function(err, t) {
+  updateContent();
+});
+
+function updateContent() {
+  document.getElementById('panicBtn').textContent = i18next.t('panic');
+  // Update other UI elements similarly
+}
+
+// Language switcher
+document.getElementById('langSelect').onchange = function() {
+  i18next.changeLanguage(this.value, updateContent);
+};
+
+// Contact management (localStorage example)
+function loadContacts() {
+  return JSON.parse(localStorage.getItem('contacts') || '[]');
+}
+
+function saveContacts(contacts) {
+  localStorage.setItem('contacts', JSON.stringify(contacts));
+  renderContacts();
+}
+
+function renderContacts() {
+  const contacts = loadContacts();
+  const list = document.getElementById('contactList');
+  list.innerHTML = '';
+  contacts.forEach((c, i) => {
+    const li = document.createElement('li');
+    li.textContent = `${c.name}: ${c.phone}`;
+    // Add edit/delete buttons as needed
+    list.appendChild(li);
+  });
+}
+
+// Add logic for adding/editing/deleting contacts
